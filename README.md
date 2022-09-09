@@ -76,10 +76,10 @@ Si se ejecuta correctamente debera aparecer un mensaje como este:
 Por ultimo validar los siguientes enlaces:
 
 ```
-database: http://localhost:8080/h2-console
-servicios-web: http://localhost:8080/swagger-ui/index.html
-calidad-del-codigo: http://localhost:63342/alianzapp/build/reports/jacoco/test/html/index.html?_ijt=ep1ioiuhajnhbj5kkb1jp4r5h1
-calidad-del-codigo: http://localhost:63342/alianzapp/build/reports/tests/test/index.html?_ijt=ep1ioiuhajnhbj5kkb1jp4r5h1
+* [database](http://localhost:8080/h2-console)
+* [servicios-web](http://localhost:8080/swagger-ui/index.html)
+* [calidad-del-codigo](http://localhost:63342/alianzapp/build/reports/jacoco/test/html/index.html?_ijt=ep1ioiuhajnhbj5kkb1jp4r5h1)
+* [calidad-del-codigo](http://localhost:63342/alianzapp/build/reports/tests/test/index.html?_ijt=ep1ioiuhajnhbj5kkb1jp4r5h1)
 ```
 
 
