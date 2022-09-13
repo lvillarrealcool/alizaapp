@@ -43,8 +43,8 @@ class AlianzappApplicationTests {
 		humanRepository = mock(HumanRepository.class);
 		mapper = mock(HumanMapper.class);
 
-		mutantServiceImpl = new MutantServiceImpl();
-		humanServiceImpl = new HumanServiceImpl(mutantServiceImpl,humanRepository);
+		mutantServiceImpl = new MutantServiceImpl(humanRepository,mapper);
+		humanServiceImpl = new HumanServiceImpl(humanRepository,mapper);
 
 		humanDTO=HumanDTO.builder().dna(DNA_HUMAN).build();
 		mutantDTO=HumanDTO.builder().dna(DNA_MUTANT).build();
@@ -55,22 +55,17 @@ class AlianzappApplicationTests {
 	}
 
 	@Test
-	void givenDnaSequenceOfHumanThenValidateIfItIsMutantThenReturnException() {
-		HumanException trown=assertThrows(HumanException.class,()->humanServiceImpl.save(humanDTO));
-		assertEquals("Forbbiden is not Dna from mutant",trown.getMessage());
-	}
-
-	@Test
 	void giveDnaSequenceOfMutanValidateThenSaveAndReturnSequenceDna(){
 		Human mutante = Human.builder().dna("ATACGA-CTGAGC-ATGTAT-AAAAAA-CCACAA-TCAAAG")
 				.isMutant(true)
 				.empId(1L)
 				.build();
 
+		when(mapper.convertHumanEntityToHumanDto(mutante)).thenReturn(mutantDTO);
 		when(humanRepository.save(mutante)).thenReturn(mutante);
-		when(humanServiceImpl.save(mutantDTO)).thenReturn(mutantDTO);
+		when(humanServiceImpl.saveHuman(mutantDTO)).thenReturn(mutantDTO);
 
-		HumanDTO mutant=humanServiceImpl.save(mutantDTO);
+		HumanDTO mutant=humanServiceImpl.saveHuman(mutantDTO);
 
 		List<String> expected = Arrays.asList(mutantDTO.getDna());
 		List<String> response = Arrays.asList(mutant.getDna());

@@ -2,8 +2,12 @@ package com.alianza.alianzapp.services.impl;
 
 import com.alianza.alianzapp.constants.Constant;
 import com.alianza.alianzapp.dtos.HumanDTO;
+import com.alianza.alianzapp.entities.Human;
 import com.alianza.alianzapp.exceptions.HumanException;
+import com.alianza.alianzapp.mappers.HumanMapper;
+import com.alianza.alianzapp.repository.HumanRepository;
 import com.alianza.alianzapp.services.IMutantService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,13 +17,31 @@ import java.util.function.Function;
 @Service
 public class MutantServiceImpl implements IMutantService {
 
+    private HumanRepository humanRepository;
+
+    private HumanMapper humanMapper;
+
+    @Autowired
+    public MutantServiceImpl(HumanRepository humanRepository,
+                             HumanMapper humanMapper) {
+        this.humanRepository = humanRepository;
+        this.humanMapper = humanMapper;
+    }
+
     @Override
-    public boolean isMutant(HumanDTO humanDTO) throws HumanException {
+    public Boolean isMutant(HumanDTO humanDTO) throws HumanException {
         Function<String[], Boolean> isMutant = s -> {
             String[][] matriz = convertDnaToMatriz(s);
             return dnaAnalyzer(matriz);
         };
         return isMutant.apply(humanDTO.getDna());
+    }
+
+    @Override
+    public HumanDTO saveMutant(HumanDTO mutant) throws HumanException {
+        Human human = new HumanMapper().convertHumanDtoToHumanEntity(mutant);
+        human.setMutant(true);
+        return humanMapper.convertHumanEntityToHumanDto(humanRepository.save(human));
     }
 
     private boolean dnaAnalyzer(String[][] matriz) {

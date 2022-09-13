@@ -5,5 +5,7 @@ import com.alianza.alianzapp.exceptions.HumanException;
 
 public interface IMutantService {
 
-    boolean isMutant(HumanDTO humanDTO) throws HumanException;
+    Boolean isMutant(HumanDTO humanDTO) throws HumanException;
+
+    HumanDTO saveMutant(HumanDTO mutant)throws HumanException;
 }

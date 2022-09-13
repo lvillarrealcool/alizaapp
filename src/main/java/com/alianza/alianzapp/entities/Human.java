@@ -1,8 +1,6 @@
 package com.alianza.alianzapp.entities;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,6 +9,8 @@ import javax.persistence.*;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Human {
 
     private static final long serialVersionUID= 1L;
@@ -21,7 +21,7 @@ public class Human {
     @Column(name = "id")
     private long empId;
 
-    @Column(name = "dna")
+    @Column(name = "dna", unique = true)
     private String dna;
 
     @Column(name = "mutante")

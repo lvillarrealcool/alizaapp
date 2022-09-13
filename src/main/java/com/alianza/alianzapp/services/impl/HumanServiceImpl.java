@@ -10,45 +10,37 @@ import com.alianza.alianzapp.services.IHumanService;
 import com.alianza.alianzapp.services.IMutantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Service
-@Transactional
 public class HumanServiceImpl implements IHumanService {
 
-    private IMutantService iMutantService;
     private HumanRepository humanRepository;
 
+    private HumanMapper humanMapper;
+
     @Autowired
-    public HumanServiceImpl(MutantServiceImpl mutantServiceImpl,
-                            HumanRepository humanRepository) {
-        this.iMutantService = mutantServiceImpl;
+    public HumanServiceImpl(HumanRepository humanRepository,HumanMapper mapper) {
         this.humanRepository = humanRepository;
+        this.humanMapper = mapper;
     }
 
     @Override
-    public HumanDTO save(HumanDTO humanDTO) throws HumanException {
-        if(iMutantService.isMutant(humanDTO)){
-            Human mutant = new HumanMapper().convertHumanDtoToHumanEntity(humanDTO);
-            mutant.setMutant(true);
-            humanRepository.save(mutant);
-            return new HumanMapper().convertHumanToHumanDto(mutant);
-        }else{
-            Human human = new HumanMapper().convertHumanDtoToHumanEntity(humanDTO);
-            human.setMutant(false);
-            humanRepository.save(human);
-        }
-        throw new HumanException("Forbbiden is not Dna from mutant");
+    public HumanDTO saveHuman(HumanDTO humanDTO) throws HumanException {
+        Human human = new HumanMapper().convertHumanDtoToHumanEntity(humanDTO);
+        return humanMapper.convertHumanEntityToHumanDto(humanRepository.save(human));
     }
 
     @Override
     public StatsDTO getStats() throws HumanException {
-        List<Human> humanos= humanRepository.findAllHumansIsMutanteFalse();
-        List<Human> mutantes=humanRepository.findAllHumansIsMutanteTrue();
+        List<Human> humanos = humanRepository.findAllHumansIsMutanteFalse();
+        List<Human> mutantes = humanRepository.findAllHumansIsMutanteTrue();
 
-        double ratio = mutantes.size()/humanos.size();
+        double ratio = mutantes.size() / humanos.size();
 
         return StatsDTO.builder()
                 .count_mutant_dna(mutantes.size())

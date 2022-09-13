@@ -6,7 +6,7 @@ import com.alianza.alianzapp.exceptions.HumanException;
 
 public interface IHumanService {
 
-    HumanDTO save(HumanDTO humanDTO)throws HumanException;
+    HumanDTO saveHuman(HumanDTO humanDTO)throws HumanException;
 
     StatsDTO getStats()throws HumanException;
 }
